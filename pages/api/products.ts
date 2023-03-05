@@ -29,10 +29,19 @@ const products: Product[] = data.items.map((item, index) => ({
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Product>
+  res: NextApiResponse<Product | Product[]>
 ) {
   const { prodID } = req.query;
+
+  // return all products if no prodID is specified
+  if(!prodID) {
+    res.status(2000).json(products)
+  }
+
+  // retrieve product from products array
   const product = products[Number(prodID)];
+
+  // return 404 if product is not found
   if (!product) {
     res.status(404).end(`Product with ID ${prodID} not found`);
     return;
